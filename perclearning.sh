@@ -36,13 +36,11 @@ function perceptron_init() {
 }
 
 function sign() {
-	sign_ret=$(bc -l <<< "$1 > 0")
-	(( sign_ret == 0 )) && sign_ret=-1
+	sign_ret=$(bc -l <<< "if ($1 < 0) print -1 else print 1")
 }
 
 function abs() {
-	abs_ret=$1
-	(( $(bc -l <<< "$1 < 0") )) && abs_ret=$(bc -l <<< "-($1)")
+	abs_ret=$(bc -l <<< "if ($1 < 0) print -($1) else print $1")
 }
 
 function start_learning() {
