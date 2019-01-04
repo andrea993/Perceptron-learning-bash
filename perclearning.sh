@@ -24,12 +24,12 @@ function read_dataset() {
 	done < $1
 
 	dims=$((j-1))
-	size=$i
+	size=$((i))
 }
 
 function perceptron_init() {
 	weights=($(
-		for i in $(seq 0 $dims); do 
+		for (( i=0 ; i<=dims ; i++ )) ; do
 			echo $((RANDOM % 2 -1)) ; 
 		done)
 	)
@@ -46,10 +46,11 @@ function abs() {
 function start_learning() {
 	local converged=1
 	while (( converged )) ; do
+		echo "Step"
 		converged=0
-		for i in $(seq 0 $((size-1))) ; do
+		for (( i=0 ; i<size ; i++ )) ; do
 			local out_i=0
-			for j in $(seq 0 $((dims-1))) ; do
+			for (( j=0 ; j<dims ; j++ )) ; do
 				out_i=$(bc -l <<< "$out_i+${dataset[$i,$j]}*${weights[$j]}")
 			done
 			out_i=$(bc -l <<< "$out_i + ${weights[$dims]}")
@@ -58,7 +59,7 @@ function start_learning() {
 			abs $delta
 			if (( $(bc -l <<<  "$abs_ret > $EPS") )) ; then
 				converged=1
-				for j in $(seq 0 $((dims-1))) ; do
+				for (( j=0 ; j<dims ; j++ )) ; do
 					weights[$j]=$(bc -l <<< "${weights[$j]} + $NI*${dataset[$i,$j]}*$delta")
 				done
 				weights[$dims]=$(bc -l <<< "${weights[$dims]} + $NI*$delta")
@@ -69,7 +70,7 @@ function start_learning() {
 
 function write_file() {
 	echo "#!/usr/bin/bc -lq" > $1
-	for i in $(seq 0 $dims) ; do
+	for (( i=0 ; i<=dims ; i++ )) ; do
 		echo "w[$i]=${weights[i]}" >> $1
 	done
 
