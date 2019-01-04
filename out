@@ -1,0 +1,15 @@
+#!/usr/bin/bc -lq
+w[0]=.2
+w[1]=.2
+w[2]=.2
+for (i=0; i<2; i++) {
+	x[i]=read()
+}
+y=0
+for (i=0; i<2; i++) {
+	y+=w[i]*x[i]
+}
+y+=w[2]
+if (y>0) print 1 else print -1
+print "\n"	
+quit
